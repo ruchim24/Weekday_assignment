@@ -16,8 +16,30 @@ const ExpandMore = styled((props) => {
 }));
 
 
-function Cards({info}){
+function Cards({info,setModal}){
   const [expanded, setExpanded] = React.useState(false);
+
+  const currency_symbols = {
+    'USD': '$', // US Dollar
+    'EUR': '€', // Euro
+    'CRC': '₡', // Costa Rican Colón
+    'GBP': '£', // British Pound Sterling
+    'ILS': '₪', // Israeli New Sheqel
+    'INR': '₹', // Indian Rupee
+    'JPY': '¥', // Japanese Yen
+    'KRW': '₩', // South Korean Won
+    'NGN': '₦', // Nigerian Naira
+    'PHP': '₱', // Philippine Peso
+    'PLN': 'zł', // Polish Zloty
+    'PYG': '₲', // Paraguayan Guarani
+    'THB': '฿', // Thai Baht
+    'UAH': '₴', // Ukrainian Hryvnia
+    'VND': '₫', // Vietnamese Dong
+};
+
+  const handleShow = (info) => {
+    setModal({show:true,info:info});
+  }
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -44,24 +66,16 @@ function Cards({info}){
         <CardContent>
           <Typography variant="body2" color="text.secondary">
             <>
-            <div style={{color:'red'}}>
-              {`Expected Salary: ${info?.salaryCurrencyCode}${info?.minJdSalary} - ${info?.maxJdSalary}`}
+            <div style={{fontWeight:'400'}}>
+              {`Expected Salary: ${currency_symbols[info?.salaryCurrencyCode]}${info?.minJdSalary ? info?.minJdSalary : ''} - ${info?.maxJdSalary ? info?.maxJdSalary : ''}`}
             </div>
             <div>
               <h2>About Company</h2>
-            {info?.jobDetailsFromCompany}
+            {info?.jobDetailsFromCompany?.slice(0,200) + '...'}
             </div>
-            <div className="blur">Show More</div>
+            <div className="blur" onClick={() => handleShow(info?.jobDetailsFromCompany)} style={{cursor:'pointer'}}>Show More</div>
             </>
           </Typography>
-          <ExpandMore
-            expand={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-           <div className="blur">Show More</div>
-          </ExpandMore>
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
